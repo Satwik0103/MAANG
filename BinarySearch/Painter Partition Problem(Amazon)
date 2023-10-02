@@ -1,0 +1,43 @@
+int countBoards(vector<int> &C, int b, long long totalboards) { // Use long long for totalboards
+    int paintcnt = 1; // Start with 1 painter
+    long long PaintBoard = 0;
+
+    for (int i = 0; i < C.size(); i++) {
+        if (PaintBoard + C[i] > totalboards) { // Check if the current board can be painted by the current painter
+            paintcnt++;
+            PaintBoard = 0;
+        }
+        PaintBoard += C[i];
+    }
+
+    return paintcnt;
+}
+
+int Solution::paint(int A, int B, vector<int> &C) {
+    long long low = INT_MIN; // Use long long for low
+    long long high = 0;
+
+    for (int z = 0; z < C.size(); z++) {
+        high += C[z];
+        if (C[z] > low) {
+            low = C[z];
+        }
+    }
+
+    if (A >= C.size()) {
+        return (low * 1LL * B) % 10000003;
+    }
+
+    while (low <= high) {
+        long long totalBoards = (low + high) / 2;
+        int PainterCnt = countBoards(C, B, totalBoards);
+
+        if (PainterCnt > A) {
+            low = totalBoards + 1;
+        } else {
+            high = totalBoards - 1;
+        }
+    }
+
+    return (low * 1LL * B) % 10000003;
+}
