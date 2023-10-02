@@ -1,0 +1,42 @@
+class Solution {
+public:
+int countWts(vector<int>&weights,int weighQty){
+    int wtCnt=1;int weighCap=0;
+    for(int i=0;i<weights.size();i++){
+        if(weighQty>=weighCap+weights[i]){
+            weighCap+=weights[i];
+        }
+        else{
+            wtCnt++;
+            weighCap=weights[i];
+        }
+
+    }
+    return wtCnt;
+}
+    int shipWithinDays(vector<int>& weights, int days) {
+        int low=INT_MIN;
+        int high=0;
+          for(int i=0;i<weights.size();i++){
+              high+=weights[i];
+              if(weights[i]>low){
+                  low=weights[i];
+              }
+          }
+          if(days>=weights.size()){
+              return low;
+          }
+       
+        while(low<=high){
+            int weighQty=(low+high)/2;
+            int countDays=countWts(weights,weighQty);
+            if(countDays>days){
+                low=weighQty+1;
+            }
+            else{
+                high=weighQty-1;
+            }
+        }
+        return low;
+    }
+};
