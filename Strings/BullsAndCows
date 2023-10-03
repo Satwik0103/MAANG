@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        int n=secret.length();
+        int cntBull=0;
+        int cntCow=0;
+        for(int i=0;i<n;i++){
+            if(secret[i]==guess[i]){
+                cntBull++;
+                secret[i]=-1;
+                guess[i]=-1;
+            }
+        }
+        for(int k=0;k<n;k++){
+           
+               if(secret.find(guess[k])!=-1 && guess[k]!=-1)  //to count no of cow
+            {
+                cntCow++;
+                secret[secret.find(guess[k])]=-1;
+            }
+        }
+        string ans=to_string(cntBull)+"A"+to_string(cntCow)+"B";
+        return ans;
+    }
+};
