@@ -1,0 +1,69 @@
+// class Solution {
+// public:
+//     int findKthLargest(vector<int>& nums, int k) {
+//         int c=0;
+//         vector<int>ans;
+//         ans.push_back(nums[0]);
+//         for(int i=1;i<nums.size();i++){
+//             int child=i;
+//             ans.push_back(nums[child]);
+          
+//             while(child>0){
+//                 int parent=(child-1)/2;
+//                 if(ans[parent]<ans[child]){
+//                     swap(ans[parent],ans[child]);
+//                     child=parent; 
+//                 }
+//                 else{
+//                     break;
+//                 }
+//             }
+//         }
+//         cout<<"YO"<<endl;
+//         for(int k=0;k<ans.size();k++){
+//             cout<<ans[k]<<" ";
+//         }
+//         int res=-1;
+//         for(int t=0;t<k;t++){
+//              res=deleteFromHeap(ans);
+//             cout<<res;
+//         }
+//         return res;
+        
+//     }
+//     int deleteFromHeap(vector<int>&heap){
+//         int t=heap[0];
+//         heap[0]=heap[heap.size()-1];
+//         heap.pop_back();
+//         heapify(heap,0);
+//         return t;
+//     }
+//     void heapify(vector<int>& heap,int i){
+//         int leftC=2*i+1;
+//         int rightC=2*i+2;
+//         int largest=i;
+//         if(leftC<heap.size() && heap[largest]<heap[leftC]){
+//             largest=leftC;
+//         }
+//         if(rightC<heap.size() && heap[largest]<heap[rightC]){
+//             largest=rightC;
+//         }
+//         if (largest !=i) {
+//                 swap(heap[i], heap[largest]);
+//                 heapify(heap,largest);
+//             } 
+//     }
+// };
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int,vector<int>,greater<int>>p;
+        for(auto x:nums){
+            p.push(x);
+            if(p.size()>k){
+                p.pop();
+            }
+        }
+        return p.top();
+    }
+};
