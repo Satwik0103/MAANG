@@ -1,0 +1,30 @@
+class KthLargest {
+public:
+    int k;
+    priority_queue<int,vector<int>,greater<int>>pq;
+    KthLargest(int k, vector<int>& nums) {
+        this->k = k;
+        //min(k, (int)nums.size()) is min(3, 6), which evaluates to 3. So, endPointer is pointing to the position after the first three elements in nums.
+        auto endPointer = nums.begin() + min(k, (int)nums.size());
+        //priority_queue<int, vector<int>, greater<int>>(nums.begin(), endPointer) constructs a priority queue (pq) with the elements from nums.begin() to endPointer (excluding endPointer). In this case, it includes the first three elements {2, 3, 5} because endPointer points to the position after them.
+        pq = priority_queue<int, vector<int>, greater<int>> (nums.begin(), endPointer);
+        for (int i = k; i < nums.size(); ++i) {
+            pq.push(nums[i]);
+            pq.pop();
+        }
+    }
+    
+    int add(int val) {
+        pq.push(val);
+        if (pq.size() > k) {
+            pq.pop();
+        }
+        return pq.top();
+    }
+};
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest* obj = new KthLargest(k, nums);
+ * int param_1 = obj->add(val);
+ */
