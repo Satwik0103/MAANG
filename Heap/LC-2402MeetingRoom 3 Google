@@ -1,0 +1,194 @@
+// bool compare(vector<int>& v1, vector<int>& v2) {
+//     return v1[0] < v2[0];
+// }
+// class Solution {
+// public:
+//     int maxEndTimeMeeting(int n, vector<vector<int>>& meetings){
+//         int maxEle=0;
+//         for(int i=0;i<meetings.size();i++){
+//                 maxEle+=meetings[i][1];
+//         }
+//         return maxEle;
+//     }
+    
+//     int mostBooked(int n, vector<vector<int>>& meetings) {
+//         // priority_queue<int,vector<int>,greater<int>>pq;
+//         // unordered_map<int,pair<int,int>>mp;
+//         // for(int i=0;i<n;i++){
+//         //     mp[i]=make_pair(0,0);
+//         // }
+//         // for(int z=0;z<meetings.size();z++){
+//         //     int start= meetings[z][0];
+//         //     int end= meetings[z][1];
+//         //     for (auto l:mp){
+//         //         if(l.second.second==0){
+//         //             l.second.second=1;
+//         //             l.second.first+=1;
+//         //         }
+//         //     }
+//         // }
+
+
+//         // pair<int,int>p=make_pair(0,-1);
+//         // for(auto k:mp){
+//         //     if(k.second.first>=p.second && p.first>k.first){
+//         //         p.second=k.first;
+//         //         p.first=k.first;
+//         //     }
+//         // }
+//         // return p.first;
+
+//         //PseudoCode
+    
+//         // pair<room,vacancy>p;
+//         // if(vacancy[room]==1){
+//         // count[room]+=1;
+//         // vacancy[room]=0;
+//         // priority_queue<endtime,room>
+//         // }
+//         // for(currentTime 0->max(endTime))
+//         // if(all Room Full){
+//         //     if(currentTime==pq.top()){
+//         //         vacancy[room]==1;
+//         //     }
+        
+//         // }
+//         // if(vacancy[room]==1){
+//         // count[room]+=1;
+//         // vacancy[room]=0;
+//         // priority_queue<endtime,room>
+//         // }
+//         // return max(count)
+
+//         //Code-
+//           sort(meetings.begin(), meetings.end(), compare);
+//         priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+//         map<int,int>mp;
+//         map<int ,int>vacancy;
+//         map<int,int>count;
+//         for(int k=0;k<n;k++){
+//             vacancy[k]=1;
+//             count[k]=0;
+//         }
+//         int z=0;
+//         int vacRoom=n;
+//         int currentRoom=0;
+//         int maxEndTime=maxEndTimeMeeting(n,meetings);
+        
+//         while(z<maxEndTime && currentRoom<meetings.size()){
+//                 if(currentRoom>vacRoom)
+//                 currentRoom=vacRoom;
+//                 if(vacancy[currentRoom]==1 && z>=meetings[currentRoom][0]){
+//                     cout<<"InsideCuurent Room"<<endl;
+//                      count[currentRoom]+=1;
+//                      vacancy[currentRoom]=0;
+//                      pq.push({meetings[currentRoom][1],currentRoom});
+//                      currentRoom++;
+//                 }
+//                 else if (vacancy[vacRoom]==1 && z>=meetings[currentRoom][0]){
+//                     cout<<"InsideVAccant Room"<<endl;
+//                      count[vacRoom]+=1;
+//                      vacancy[vacRoom]=0;
+//                      cout<<currentRoom<<endl;
+//                      int val=(z+meetings[currentRoom][1]-meetings[currentRoom][0]-1);
+//                      cout<<"VaccRoom"<<vacRoom<<"VacVal"<<val<<endl;
+//                      pq.push({val,vacRoom});
+//                      currentRoom++;
+//                 }
+//                 int t=-1;
+//                 while(!pq.empty()&&z>=pq.top().first){
+//                     auto popVal=pq.top();
+//                     pq.pop();
+//                     vacRoom=popVal.second;
+//                     if(t==-1)
+//                     t=vacRoom;
+//                     cout<<"VacRoomValue-"<<vacRoom<<endl;
+//                     vacancy[vacRoom]=1;
+//                     }
+//                     vacRoom=t;
+//             z++;
+//         }
+//         int maxRoom=-1;
+//         int ans=-1;
+//         for(auto cnt:count){
+//             cout<<cnt.first<<cnt.second<<endl;
+//             if(maxRoom<cnt.second){
+//                 maxRoom=cnt.second;
+//                 ans=cnt.first;
+//             }
+//         }
+//         return ans;
+//     }
+// };
+
+bool compare(vector<int>& v1, vector<int>& v2) {
+    return v1[0] < v2[0];
+}
+class Solution {
+public:
+    int mostBooked(int n, vector<vector<int>>& meetings) {
+        /* Sort the meetings based on start_time */
+        sort(meetings.begin(), meetings.end(), compare);
+        
+        /* Create a priority queue for engaged rooms. Each node of PQ will store {current_meeting_ending_time, room_number} */
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> engaged;
+        
+        /* Create a priority queue for non-engaged rooms. Each node of PQ will store {room_number} */
+        priority_queue<int, vector<int>, greater<int>> unused;
+        
+        /* Frequency map to store the frequency of meetings in each room */
+        unordered_map<int, int> freq;
+        
+        /* Currently all the rooms are mepty */
+        for(int i = 0; i < n; i++) {
+            unused.push(i);
+        }
+        
+        for(auto x:meetings) {
+            int s = x[0], e = x[1];
+            
+            /* Move the meeting rooms in engaged, with ending_time <= s, to unused */ 
+            while(engaged.size() > 0 && engaged.top().first <= s) {
+                int room = engaged.top().second;
+                engaged.pop();
+                
+                unused.push(room);
+            }
+            
+            /* If there are multiple empty rooms, choose the one with lower room_number */
+            if(unused.size() > 0) 
+            {
+                int room = unused.top();
+                unused.pop();
+                
+                freq[abs(room)] += 1;
+                
+                /* Mark the room as engaged */
+                engaged.push({e, room});
+            }
+            /* If there are no empty rooms, wait for the engaged room with nearest ending time to empty */
+            else 
+            {
+                pair<long long, int> topmost = engaged.top();
+                engaged.pop();
+            
+                freq[abs(topmost.second)] += 1;
+                
+                /* Since duration has to be the same, the newEnd will be sum(end_time_of_the_prev_meeting, duration) */ 
+                long long newEnd = topmost.first;
+                newEnd += (e - s);
+                
+                /* Mark the room as engaged */
+                engaged.push({newEnd, topmost.second});
+            }
+        }
+        
+        /* Find the lowest room_number with maximum frequency */
+        int maxi = 0;
+        for(int i = 1; i < n; i++) {
+            if(freq[i] > freq[maxi])
+                maxi = i;
+        }
+        return maxi;
+    }
+};
