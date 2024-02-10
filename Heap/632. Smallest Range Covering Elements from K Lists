@@ -1,0 +1,70 @@
+//Step-1 In this program i first thought to make pair of each element with the corresponding row
+//like {ele,row}->{4,0},{0,1},{5,2} and i made a mapthat store each rows currentelement Index
+//Step-2 that is {row,colIdx} and initialize each colIx by 0
+//Why i did this?
+//Step 3 I want a priority queue(minHeap that is smallest element at top) of each pair whose size will not be greater than totalRows
+//Step 4 I keep inserting elements vertically  inside priority queue till its size equal totalRow-1  
+//Vertically means inserting elements of 1st collumn in the PQ as it consist of smallest element of each row 
+//that is 4,0,5 int he above eg
+//Step 5 After I Inserted  element from each row  in priority queue.I took out topmost Element from the PQ
+//Step 6 The element which is popped  is from a particular row so we need to insert new element from that row only as the range should contain each element of each row
+//that is why i made a pair the element popped stores the index of the row it was in 
+//Step-7 And From that index of row I incremented the collumn using the map in which i stored all current row and collumn
+//Step-8 Later I checked dif If dif was smaller i updated smallest and largest element 
+//Step-9 And at end pushed it in the resultant array
+
+
+
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        vector<int>ans;
+        int k=nums.size();
+        int totalEle=0;
+        int largest=INT_MIN;
+        int smallest=INT_MAX;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+        map<int,int>mp;
+        map<int,int>idxStore;
+        for(int i=0;i<nums.size();i++){
+            for(int j=0;j<nums[i].size();j++){
+                largest=largest<nums[i][j]?nums[i][j]:largest;
+                smallest=smallest>nums[i][j]?nums[i][j]:smallest;
+                totalEle++;
+            }
+            idxStore[i]=0;
+        }
+        int rowIdx=0;
+        int maxEle=INT_MIN;
+        int dif=INT_MAX;
+        int currEle=0;
+       while (rowIdx < k && idxStore[rowIdx] < nums[rowIdx].size()) {
+             currEle=nums[rowIdx][idxStore[rowIdx]];
+            if(pq.size()<k-1){
+                maxEle=maxEle<currEle?currEle:maxEle;
+                pair<int,int>p=make_pair(currEle,rowIdx);
+                pq.push(p);
+                rowIdx++;
+            }
+            else if (pq.size()==k-1){
+                maxEle=maxEle<currEle?currEle:maxEle;
+                pair<int,int>p=make_pair(currEle,rowIdx);
+                pq.push(p);
+                auto topElePair=pq.top();
+                int topEle=topElePair.first;
+                pq.pop();
+                rowIdx=topElePair.second;
+                idxStore[rowIdx]++;
+                int currDif=abs(maxEle-topEle);
+                if(dif>currDif){
+                    dif=currDif;
+                    smallest=topEle;
+                    largest=maxEle;
+                }
+            }
+        }
+    ans.push_back(smallest);
+    ans.push_back(largest);
+    return ans;
+  }
+};
