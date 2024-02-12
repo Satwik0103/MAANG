@@ -1,33 +1,23 @@
-//total sum is calculated of each value of map containg vector
-//For x=4 val-{1,2,3,4,5,6}
-//total sum=21;
-//ans=(4-1)+(4-2)+(4-3)+(5-4)+(6-4)
-//PrefixSum = (4-1)+(4-2)+(4-3)=>3*4-(1+2+3)=i*x-Csum
-//Remaining Sum=TotalSum-Csum-x;
-//SuffixSum=Remining Sum-(val.size()-i-1)*x= 11-(2*4)
-//Ans=PrefixSum+suffixSum
 class Solution {
 public:
-   
- vector<long long> distance(vector<int>& arr) {
-     unordered_map<int, vector<int>> m;
-    vector<long long> res(arr.size());
-    for (int i = 0; i < arr.size(); i++) {
-        m[arr[i]].push_back(i);
-    }
-    for (auto i = m.begin(); i != m.end(); i++) {
-        vector<int> l = i -> second;
-        vector<long long> pre(l.size() + 1, 0);
-        //Preparing total prefix sum
-        for (int j = 0; j < l.size(); j++) 
-            pre[j + 1] = pre[j] + l[j];
+    vector<int> leftRightDifference(vector<int>& nums) {
+        int n=nums.size();
+        vector<int>res;
+        vector<int>leftsum(n,0);
+        vector<int>rightSum(n,0);
+        leftsum[0]=0;
+        for(int i=1;i<n;i++){
+            leftsum[i]=leftsum[i-1]+nums[i-1];
 
-        for (int j = 0; j < l.size(); j++) {
-            long long v = l[j];
-            res[l[j]] = (v * (j + 1) - pre[j + 1]) 
-                 + ((pre[l.size()] - pre[j]) - v * (l.size() - (j)));
         }
-    }
-    return res;
+        rightSum[n-1]=0;
+         for(int i=n-2;i>=0;i--){
+            rightSum[i]=nums[i+1]+rightSum[i+1];
+        }
+        for(int i=0;i<n;i++){
+            res.push_back(abs(rightSum[i]-leftsum[i
+            ]));
+        }
+        return res;
     }
 };
