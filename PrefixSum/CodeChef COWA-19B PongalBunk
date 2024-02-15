@@ -1,0 +1,59 @@
+https://www.codechef.com/problems/COWA19B?tab=solution
+
+
+Maintain two arrays (array1,array2).
+-> first array (array1) to know the number of queries having the specific index in their range of L,R. For each query apply,
+
+1)array1[L]=array1[L]+1
+2) array1[R+1]=array1[R+1]-1
+->second array (array2) to know the final value of element in the specific index of array for each query to apply,
+
+1) array2[R+1]=array2[L]-(R-L+1)
+
+After Performing All the queries operations,
+
+->Run an iteration for prefix array sum for array1 i.e ,
+array1[i]=array[i]+array1[i-1] (where 1<=i<=N)
+
+->Run other iteration for array2 similar to prefix sum doing following operations
+array2[i]=array2[i] + array2[i-1] + array1[i] (where 1<=i<=N)
+
+Now, array2 contains the final values of elements present in array
+
+Time-complexity: O(n+q+m)
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int n;
+	cin>>n;
+	int q;
+	cin>>q;
+	vector<int>ans(n+1,0);
+	vector<int>ans1(n+1,0);
+
+	for(int i=0;i<q;i++){
+	    int l,r,t;
+	    cin>>l>>r;
+	     t=l;
+        ans[t]+=1;
+        ans[r+1]+=-1;
+        ans1[r+1]-=(r-l+1);
+	  
+	}
+	for(int t=1;t<=n;t++){
+	    ans[t]+=ans[t-1];
+	    ans1[t]+=ans1[t-1]+ans[t];
+	}
+	int m;
+	cin>>m;
+	for(int k=0;k<m;k++){
+	    int val;
+	    cin>>val;
+	    cout<<ans1[val]<<endl;
+	}
+
+}
