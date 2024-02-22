@@ -1,0 +1,70 @@
+// #include<bits/stdc++.h>
+// using namespace std;
+// bool isCheck(int mid, int rb, int rs, int rc, int nb, int ns, int nc, int pb, int ps, int pc, int rubee) {
+//     int nb_ = mid * rb - nb;
+//     int nc_ = mid * rc - nc;
+//     int ns_ = mid * rs - ns;
+//     if (nb_ < 0) nb_ = 0;
+//     if (nc_ < 0) nc_ = 0;
+//     if (ns_ < 0) ns_ = 0;
+//     int pb_ = pb * nb_;
+//     int ps_ = ps * ns_;
+//     int pc_ = pc * nc_;
+//     int total = pb_ + ps_ + pc_;
+//     return total <= rubee;
+// }
+
+// int main(){
+//     string s;
+//     cin>>s;
+//     int nb,ns,nc,pb,ps,pc,rubee;
+//     cin>>nb>>ns>>nc;
+//     cin>>pb>>ps>>pc;
+//     cin>>rubee;
+//     int rb=0;
+//     int rs=0;
+//     int rc=0;
+//     for(int i=0;i<s.size();i++){
+//         if(s[i]=='B')
+//         rb++;
+//         else if(s[i]=='S')
+//         rs++;
+//         else if(s[i]=='C')
+//         rc++;
+//     }
+//     int ans=0;
+//     int low=1;
+//     int high=60;
+//     while(low<=high){
+//       int mid=low+(high-low)/2;
+//         if(isCheck(mid,rb,rs,rc,nb,ns,nc,pb,ps,pc,rubee)==true){
+//             ans=mid;
+//             low=mid+1;
+//         }
+//         else{
+//             high=mid-1;
+//         }
+//     }
+//     cout<<ans<<endl;
+//     return 0;
+// }
+#include<iostream>
+#define ll long long
+using namespace std;
+int main()
+{
+	ll x=0,y=0,z=0,a,b,c,xx,yy,zz,u,l=0,r=1e13,m;
+	string s; cin>>s; for(auto i:s) if(i=='B') x++; else if(i=='S') y++; else z++;
+	cin>>a>>b>>c>>xx>>yy>>zz>>u;
+	while(l<=r)
+	{
+		ll h=u;
+		m=(l+r)/2;
+		h-=(ll)(max(0ll,(ll)(m*x-a))*xx);
+		h-=(ll)(max(0ll,(ll)(m*y-b))*yy);
+		h-=(ll)(max(0ll,(ll)(m*z-c))*zz);
+		if(h<0) r=m-1;
+		else l=m+1;
+	}
+	cout<<l-1<<endl;
+}
