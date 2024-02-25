@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+#define int long long
+#define vec(x) vector<x>
+#define pb push_back
+#define pii pair<int,int>
+#define vi vector<int>
+using namespace std;
+int n,k;
+bool check(int m,vi a,int flag)
+{
+    cout<<m<<flag<<endl;
+	int cnt=0;
+	for(auto x:a)
+	{
+	    cout<<"CNT"<<cnt<<x;
+		if(x<=m or cnt%2==!flag)
+		cnt++;
+	}//It checks no of elements greater than k for each mid if it is as we need to find min we do h=mid
+	return cnt>=k;
+}
+ 
+void solve()
+{
+	cin>>n>>k;
+	vi a(n);
+	int sum=0;
+	for(auto &x:a){
+	cin>>x;
+	 sum+=x;
+	}
+	int l=1,h=sum,m;
+	cout<<sum<<endl;
+	while(l<h)
+	{
+		m=(l+h)/2;
+		if(check(m,a,0) or check(m,a,1))
+			h=m;
+		else
+			l=m+1;
+	}
+	cout<<l<<endl;
+}
+ 
+int32_t main()
+{
+	ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+	int t;
+	t=1;
+	//cin>>t;
+	while(t--)
+		solve();
+}
