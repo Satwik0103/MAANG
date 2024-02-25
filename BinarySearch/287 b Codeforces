@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+#define ll long long 
+using namespace std;
+
+bool checkIfValid(int mid, int n){
+    set<int> s;
+    cout<<mid;
+    
+        s.insert(mid);
+    while(n >= 0){
+        if(n == 0){
+            return true;
+        }
+        n = n - mid;
+        mid=n;
+        if(s.count(n) > 0){
+            break;
+        }
+        
+    }
+    return false;
+}
+//https://www.youtube.com/watch?v=ipaRrZlzJ_E
+ll sum(ll n){
+    return n*(n+1)/2;
+}
+int main(){
+   
+
+    // if(n/k == 1 && n % k == 0){
+    //     cout << "1";
+    //     return 0;
+    // }
+
+    // int low = 2;
+    // int high = k;
+    // int ans = 0;
+    
+    // while(low <= high){
+    //     int mid = (low + high) / 2;
+    //     if(checkIfValid(mid, n)){
+    //         high = mid - 1;
+    //         ans = low;
+    //     }
+    //     else{
+    //         if(ans == 0)
+    //             ans = -1;
+    //         low = mid + 1;
+    //     }
+    // }
+    
+    // if(ans == -1){
+    //     cout << ans;
+    //     return 0;
+    // }
+    
+    // cout << ans;
+     ll n, k;
+    cin >> n >> k; // Initialize n and k
+    ll ans=0;
+    ll s=sum(k-1);
+    n=n-1;
+    if(n>s){
+        cout<<-1<<endl;
+    }
+    else{
+        ll low=0;
+        ll high=k-1;
+        while(low<=high){
+            ll mid =(low+(high-low)/2);
+            if(s-sum(mid)>=n)
+            low=mid+1;
+            else
+            high=mid-1;
+        }
+         cout<<k-high-1;//end-start+1;
+         
+    }
+   
+    return 0;
+}
