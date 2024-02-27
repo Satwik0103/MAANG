@@ -1,0 +1,137 @@
+#include<bits/stdc++.h>
+#define int long long
+#define vec(x) vector<x>
+#define pb push_back
+#define pii pair<int,int>
+#define vi vector<int>
+using namespace std;
+int n,k;
+// bool check(int m,vi a,vi b)
+// {
+//     cout<<m<<endl;
+// 	int cnt=0;
+// 	int n=a.size();
+// 	for(int i=0;i<n;i++){
+// 	    a[i]-b[i]+mid
+// 	}
+// 	for(auto x:a)
+// 	{
+// 	    cout<<"CNT"<<cnt<<x;
+// 		if(x<=m or cnt%2==!flag)
+// 		cnt++;
+// 	}//It checks no of elements greater than k for each mid if it is as we need to find min we do h=mid
+// 	return cnt>=k;
+// }
+ 
+// void solve()
+// {
+// 	cin>>n>>k;
+// 	vi a(n);
+// 	vi b(n);
+// 	int sum=0;
+// 	for(auto &x:a){
+// 	cin>>x;
+// 	sum+=x;
+// 	}
+// 	for(auto &y:b){
+// 	cin>>y;
+// 	sum+=y;
+// 	}
+// 	int l=1,h=sum,m;
+// 	cout<<sum<<endl;
+// 	while(l<h)
+// 	{
+// 		m=(l+h)/2;
+// 		if(check(m,a,b))
+// 			h=m;
+// 		else
+// 			l=m+1;
+// 	}
+// 	cout<<l<<endl;
+// }
+
+ 
+int32_t main()
+{
+	ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+	
+	int tt = 1;
+  // cin >> tt;
+  while(tt--){
+    int n,k;
+    cin >> n >> k;
+    vector<int> a(n),b(n);
+    for(auto &it: a) cin >> it;
+    for(auto &it: b) cin >> it;
+    bool nocharge = true;
+    for(int i=0; i<n; i++){
+      int cnt = a[i]/b[i];
+      if(cnt < k-1) nocharge = false;
+    }
+ //All charged and can handle k minutes
+    if(nocharge){
+      cout << 0 << endl;
+      continue;
+    }
+ 
+    int lo = 1;
+    int hi = 1e13 + 2;
+    int ans = LLONG_MAX;
+    while(lo <= hi){
+      int mid = (lo + hi)/2;
+      vector<vector<pair<int,int>>> arr(k);
+      for(int i=0; i<n; i++){
+        int val = a[i]/b[i];
+        if(val < k){
+          arr[val].push_back({i,a[i] - b[i] * val});
+        }
+      }
+      int cnt = 0;
+      bool ok = true;
+ 
+      for(int i=0; i<k-1; i++){
+        cnt++;
+        for(auto &it : arr[i]){
+          int idx = it.first;
+          int curr = it.second;
+          int req = (b[idx] - curr + (mid - 1))/mid;
+          // if(mid == 5){
+            // cout <<"curr : " << curr << endl;
+            // cout <<"req : " << req << endl;
+          // }
+          if(req > cnt){
+            // if(mid == 5){
+              // cout <<"break" << i << endl;
+            // }
+            ok = false;
+            break;
+          }
+          cnt -= req;
+          int nval = curr + req * mid;
+          int val = nval/b[idx];
+          // if(mid == 5){
+            // cout <<"nval : " << nval << endl;
+            // cout <<"val : " << val << endl;
+          // }
+          if(i + val < k) arr[i+val].push_back({idx, nval - b[idx] * val}); 
+        }
+      }
+      if(ok){
+        ans = mid;
+        hi = mid -1;
+      }else{
+        lo = mid + 1;
+      }
+    }
+    if(ans == LLONG_MAX) ans= -1;
+    cout << ans << endl;
+  }
+  
+	
+	
+// 	int t;
+// 	t=1;
+// 	//cin>>t;
+// 	while(t--)
+// 		solve();
+}
