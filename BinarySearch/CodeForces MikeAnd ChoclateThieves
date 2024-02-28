@@ -1,0 +1,20 @@
+https://codeforces.com/contest/689/problem/C
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+	long long n;
+	cin>>n;
+	long long l=1,r=1e17,ans=-1;
+	while(l<=r){
+		long long x=0;
+		long long m=(l+r)/2;
+		for(long long i=2;i*i*i<=m;i++){
+		    //Formula for 4 th term in GP as there are 4 thieves
+			x+=m/(i*i*i);
+		}
+		if(x==n) ans=m;
+		if(x>=n) r=m-1;
+		else l=m+1;
+	}
+	cout<<ans;
+}
